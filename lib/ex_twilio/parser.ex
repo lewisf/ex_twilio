@@ -43,7 +43,7 @@ defmodule ExTwilio.Parser do
   @spec parse(HTTPoison.Response.t(), module) :: success | error
   def parse(response, module) do
     handle_errors(response, fn body ->
-      Poison.decode!(body, as: target(module))
+      Jason.decode!(body, as: target(module))
     end)
   end
 
@@ -84,7 +84,7 @@ defmodule ExTwilio.Parser do
     result =
       handle_errors(response, fn body ->
         as = Map.put(%{}, key, [target(module)])
-        Poison.decode!(body, as: as)
+        Jason.decode!(body, as: as)
       end)
 
     case result do
@@ -103,7 +103,7 @@ defmodule ExTwilio.Parser do
         :ok
 
       %{body: body, status_code: status} ->
-        {:ok, json} = Poison.decode(body)
+        {:ok, json} = Jason.decode(body)
         {:error, json, status}
     end
   end
